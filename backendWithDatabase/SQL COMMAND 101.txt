@@ -1,0 +1,83 @@
+CREATE TABLE employee (
+ Emp_name varchar(255),
+ Age smallint,
+ SSN char(13),
+ Salary int,
+ Department smallint
+);
+
+CREATE TABLE department ( 
+ Department_name varchar(255),
+ Department_id smallint,
+ chief char(13),
+ location varchar(255)
+);
+
+SHOW TABLES;
+
+SHOW COLUMNS FROM department;
+SHOW COLUMNS FROM employee; 
+
+ALTER TABLE employee RENAME TO member;
+ALTER TABLE member RENAME TO employee;
+
+ALTER TABLE employee ADD graduated boolean;
+ALTER TABLE employee ADD CONSTRAINT PK_employee PRIMARY KEY (SSN);
+ALTER TABLE department ADD CONSTRAINT PK_department PRIMARY KEY (department_id);
+ALTER TABLE employee ADD CONSTRAINT FK_EmployeeDepartment FOREIGN KEY (department) REFERENCES department(department_id);
+ALTER TABLE department ADD CONSTRAINT FK_DepartmentEmployee FOREIGN KEY (chief) REFERENCES employee(SSN);
+
+INSERT INTO employee VALUES ("program", 22, "1234567891234", 35000, 1, false); 
+INSERT INTO employee VALUES ("ig-q", 22, "0123456789123", 35000, 1, false); 
+
+INSERT INTO department VALUES ("CoE", 1, null, "EN");
+
+UPDATE department SET chief = "0123456789123" WHERE department_id = 1;
+
+INSERT INTO employee VALUES ("P'Note", 10, "1212312121000", 35000, 1, false); 
+INSERT INTO employee VALUES ("Kevin", 100, "0001212312121", 35000, 1, false); 
+INSERT INTO department VALUES ("Zercle", 2, null, "lung-more");
+
+UPDATE department SET chief = "0001212312121" WHERE department_id = 2;
+UPDATE employee SET Department = "2" WHERE emp_name = "P'Note" OR emp_name = "Kevin";
+SELECT * FROM department;
+SELECT * FROM employee;
+SELECT emp_name FROM employee;
+
+//อยากดู ชื่อคน ชื่อแผนกและเลขบัตร ของหัวหน้าแผนก คนที่คุมแผนก Zercle
+explain SELECT Emp_name, SSN, department_name FROM employee JOIN department ON department.chief = employee.SSN WHERE department.department_id = 2;
+SELECT * FROM employee JOIN department ON employee.SSN = department.chief;
+SELECT * FROM employee JOIN department ON employee.department = 2;
+SELECT Emp_name, SSN, department FROM employee JOIN department ON employee.SSN = department.chief WHERE employee.department = 2;
+SELECT * FROM employee ORDER BY Age desc;
+
+SELECT * FROM employee WHERE Age IN (10,22)
+SELECT * FROM employee WHERE employee.department IN (SELECT department.Department_id FROM department WHERE department.department_name = "Zercle");
+
+SELECT COUNT(Salary) FROM employee WHERE Salary >= 20000;
+SELECT SUM(Salary) FROM employee;
+SELECT AVG(Age) FROM employee; 
+
+บริษัท มะโอ้น จำกัด เป็นบริษัท software developer หน้าใหม่ประกอบไปด้วย
+พนักงานบริษัทหลายคน แต่ละคนทำงานในแผนกต่าง ๆ ได้แก่ web developer
+moblie application developer, Tester และ Customer Service 
+
+พนักงานแต่ละคนมีข้อมูลที่ต้องการใช้ในบริษัทได้แก่ ชื่อ นามสกุล ที่อยู่ เบอร์โทรศัพท์
+เงินเดือน รหัสประจำตัวประชาชน โดยบริษัทจะออกบัตรพนักงาน ซึ่งมีรหัสพนักงาน 
+พร้อมทั้งแผนกที่สังกัดอยู่และฉายาของพนักงาน
+
+พนักงานแต่ละคนจะดูแล project ต่าง ๆ โดยอาจดูแลมากกว่า 1 โปรเจ็คในเวลาเดียวกันได้
+และแต่ละโปรเจ็คก็สามารถมีคนทำงานพร้อมกันได้หลายคน โดยในแต่ละ project จะมี หัวหน้า project และ tester เพียงคนเดียวเท่านั้น
+
+นอกจากนี้ผู้บริหารบริษัทยังอยากเก็บข้อมูลเวลาทำงานของพนักงานแต่ละคนว่าจากเวลาทำงานถึงเลิกงาน
+ใช้เวลาทำงานกี่ชั่วโมงในโปรเจคไหนบ้าง
+
+
+
+
+
+
+
+
+
+
